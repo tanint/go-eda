@@ -1,0 +1,25 @@
+server:
+  port: 8080
+  host: "0.0.0.0"
+
+kafka:
+  # Replace with your Confluent Cloud broker endpoints
+  brokers:
+    - "pkc-xxxxx.us-east-1.aws.confluent.cloud:9092"
+  security_protocol: "SASL_SSL"
+  sasl_mechanism: "PLAIN"
+  # Set these via environment variables for security:
+  # export APP_KAFKA_SASL_USERNAME="your-api-key"
+  # export APP_KAFKA_SASL_PASSWORD="your-api-secret"
+  sasl_username: ""
+  sasl_password: ""
+  group_id: "default-group"
+  topics:
+    order_created: "order.created"
+    order_confirmed: "order.confirmed"
+    inventory_reserved: "inventory.reserved"
+
+logger:
+  level: "info"
+  encoding: "json"
+  output_path: "stdout"
