@@ -1,10 +1,10 @@
 # Go Event-Driven Architecture with Kafka
 
-โปรเจค POC สำหรับการใช้งาน Go กับ Kafka ด้วย Event-Driven Architecture แบบ production-grade
+A production-grade POC project for Go and Kafka Event-Driven Architecture
 
 ## 🏗️ Architecture
 
-ระบบ Order Management แบบ Event-Driven ประกอบด้วย 3 services:
+Event-Driven Order Management System consisting of 3 microservices:
 
 ```text
 ┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
@@ -21,9 +21,9 @@
 
 ### Event Flow
 
-1. **Order Service**: รับ HTTP request สร้าง order → publish `order.created` event
-2. **Inventory Service**: consume `order.created` → จอง inventory → publish `inventory.reserved` event
-3. **Notification Service**: consume `inventory.reserved` → ส่ง notification
+1. **Order Service**: Receives HTTP requests to create orders → publishes `order.created` event
+2. **Inventory Service**: Consumes `order.created` → reserves inventory → publishes `inventory.reserved` event
+3. **Notification Service**: Consumes `inventory.reserved` → sends notifications
 
 ## 🚀 Tech Stack
 
@@ -77,7 +77,7 @@ cd go-eda
 
 ```bash
 make install
-# หรือ
+# or
 go mod download
 ```
 
@@ -87,15 +87,15 @@ go mod download
 make dev-setup
 ```
 
-คำสั่งนี้จะ:
+This command will:
 
-- Start Kafka และ Zookeeper ด้วย Docker Compose
-- สร้าง Kafka topics ที่จำเป็น
+- Start Kafka and Zookeeper with Docker Compose
+- Create necessary Kafka topics
 - Download Go dependencies
 
 ## 🏃 Running the Application
 
-### Local Development (แบบง่าย)
+### Local Development
 
 1. **Start Kafka and dependencies**
 
@@ -103,9 +103,9 @@ make dev-setup
    make docker-up
    ```
 
-   Kafka UI จะพร้อมใช้งานที่: <http://localhost:8090>
+   Kafka UI will be available at: <http://localhost:8090>
 
-2. **Run services** (แต่ละ service ในแต่ละ terminal)
+2. **Run services** (each service in a separate terminal)
 
    Terminal 1 - Order Service:
 
@@ -175,16 +175,16 @@ curl http://localhost:8080/health
 
 ### 4. Monitor Events in Kafka UI
 
-เปิด <http://localhost:8090> และดู topics:
+Open <http://localhost:8090> and view topics:
 
 - `order.created`
 - `inventory.reserved`
 
 ## ⚙️ Configuration
 
-### Local Development
+### Local Development Configuration
 
-ใช้ `configs/config.local.yaml` หรือ environment variables:
+Use `configs/config.local.yaml` or environment variables:
 
 ```bash
 export APP_SERVER_PORT=8080
@@ -194,13 +194,13 @@ export APP_LOGGER_LEVEL=info
 
 ### Confluent Cloud
 
-1. **Copy และแก้ไข config**
+1. **Copy and edit config**
 
    ```bash
    cp configs/config.confluent.yaml configs/config.yaml
    ```
 
-2. **Set credentials ผ่าน environment variables**
+2. **Set credentials via environment variables**
 
    ```bash
    export APP_KAFKA_BROKERS=pkc-xxxxx.us-east-1.aws.confluent.cloud:9092
@@ -244,19 +244,19 @@ make dev-setup         # Setup local development environment
 make dev-clean         # Clean up development environment
 ```
 
-## 🔍 Production Best Practices ที่ใช้
+## 🔍 Production Best Practices
 
 ### 1. Configuration Management
 
-- Viper รองรับ multiple configuration sources
+- Viper supports multiple configuration sources
 - Environment variables override file config
-- Sensitive data (credentials) ไม่ commit ใน code
+- Sensitive data (credentials) are not committed to code
 
 ### 2. Logging
 
-- Structured logging ด้วย Zap
-- Log levels configurable
-- JSON encoding สำหรับ production, console สำหรับ development
+- Structured logging with Zap
+- Configurable log levels
+- JSON encoding for production, console for development
 
 ### 3. Kafka Producer
 
@@ -268,9 +268,9 @@ make dev-clean         # Clean up development environment
 ### 4. Kafka Consumer
 
 - Manual offset commit (at-least-once delivery)
-- Consumer groups สำหรับ load balancing
+- Consumer groups for load balancing
 - Graceful shutdown
-- Error handling และ logging
+- Error handling and logging
 
 ### 5. HTTP Server
 
